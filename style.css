@@ -1,0 +1,86 @@
+* {
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+    font-family: Roboto, Arial, sans-serif;
+}
+
+/* 
+color:#c1cbfd;
+rgb(88, 90, 99);
+rgb(37, 32, 43);
+rgb(150, 136, 201);
+rgb(132, 120, 175);
+rgb(133, 115, 199); 
+*/
+
+.bg-tile, .brick-tile {
+    position:fixed;
+}
+
+#gameCanvas {
+    width: 640px;
+    background: url("res/table.png") no-repeat;
+    background-size: 100% 100%;
+    image-rendering: pixelated;
+    justify-self: center;
+    margin:3rem;
+}
+
+body {
+    background: none !important;
+}
+
+#wrapper {
+    text-align: center;
+    display:grid;
+    grid-template-rows:auto;
+    margin:5rem;
+}
+
+#box {
+    border-style: solid;
+    border-color: rgba(150, 136, 201, 0.9);
+    background-color: rgba(144, 115, 190, 0.9);
+    box-shadow:0px 0px 2px 1px rgba(37, 32, 43, .75);
+    padding:1.5rem;
+    margin-top:2rem;
+    border-color: rgba(150, 136, 201, 0.9);
+    background-color: rgba(133, 115, 199, .9);
+    color:#c1cbfd;
+    line-height: 200%; 
+    font-size:1.5rem
+}
+
+.title {
+    border-style: solid;
+    border-color: rgba(150, 136, 201, 0.9);
+    background-color: rgba(101, 83, 165, 0.9);
+    color:#c1cbfd;
+    z-index: 1;
+    font-size:2.5rem;
+    font-weight: bold;
+    margin:0rem 3rem;
+    text-align: center;
+}
+
+#newDrop {
+    border-style: solid;
+    border-color: rgba(150, 136, 201, 0.9);
+    background-color: rgba(101, 83, 165, 0.9);
+    width: 25%;
+    margin-top: 2rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.5rem;
+    color: #c1cbfd;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    text-align: center; 
+}
+
+#main img{
+    max-width: 100%;
+}
