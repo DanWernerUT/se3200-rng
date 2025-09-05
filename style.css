@@ -14,8 +14,23 @@ rgb(132, 120, 175);
 rgb(133, 115, 199); 
 */
 
-.bg-tile, .brick-tile {
+#bgCanvas {
+  position: fixed;  /* or absolute */
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  display: block;   /* removes inline gap from canvas */
+  z-index: -1;      /* stays behind other elements */
+      margin:0px;
+    image-rendering: pixelated;
+}
+
+.bg-tile, .brick-tile, #bgCanvas {
+    margin:0px;
+    z-index: -1;
     position:fixed;
+    image-rendering: pixelated;
 }
 
 #gameCanvas {

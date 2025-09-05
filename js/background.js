@@ -1,110 +1,156 @@
-function drawBackgroundTiles() {
-    document.querySelectorAll('.bg-tile').forEach(tile => tile.remove());
+let backgroundBuffer = null;
+
+async function buildBackgroundTiles() {
+    const dpr = window.devicePixelRatio || 1;
+    const buffer = document.createElement("canvas");
+    buffer.width = window.innerWidth * dpr;
+    buffer.height = window.innerHeight * dpr;
+    const bcontext = buffer.getContext("2d");
+    bcontext.imageSmoothingEnabled = false;
+    bcontext.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const tileSize = 100;
     const cols = Math.ceil(window.innerWidth / tileSize);
     const rows = Math.ceil(window.innerHeight / tileSize);
 
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            const tile = document.createElement('div');
-            tile.className = 'bg-tile';
-            tile.style.width = `${tileSize}px`;
-            tile.style.height = `${tileSize}px`;
-            tile.style.left = `${x * tileSize}px`;
-            tile.style.top = `${y * tileSize}px`;
-            const textures = [
-                // 'cobblestone.png',
-                // 'cobblestone.png',
-                // 'cobblestone2.png'
-                'arcade.svg'
-            ];
-            const randomTexture = textures[Math.floor(Math.random() * textures.length)];
-            tile.style.backgroundImage = `url('../res/${randomTexture}')`;
-            tile.style.backgroundSize = 'cover';
-            tile.style.imageRendering = 'pixelated';
-            tile.style.zIndex = '-1';
-            const flipX = Math.random() < 0.5 ? -1 : 1;
-            const flipY = Math.random() < 0.5 ? -1 : 1;
-            const angle = 90 * Math.floor(Math.random() * 4);
-            tile.style.transform = `scaleX(${flipX}) scaleY(${flipY}) rotate(${angle}deg)`;
-            document.body.appendChild(tile);
+    const textures = [
+        'res/cobblestone.png',
+        'res/cobblestone.png',
+        'res/cobblestone.png',
+        'res/cobblestone2.png',
+        // 'res/arcade.png'    
+    ];
+
+    const images = textures.map(src => {
+        const img = new Image();
+        img.src = src;
+        return img;
+    });
+
+    return Promise.all(images.map(function (img) {
+        return new Promise(function (resolve) {img.onload = resolve;});
+    })).then(function () {
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const texture = images[Math.floor(Math.random() * images.length)];
+                const flipX = Math.random() < 0.5 ? -1 : 1;
+                const flipY = Math.random() < 0.5 ? -1 : 1;
+                const angle = 90 * Math.floor(Math.random() * 4);
+
+                bcontext.save();
+                bcontext.translate(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2);
+                bcontext.scale(flipX, flipY);
+                bcontext.rotate((angle * Math.PI) / 180);
+                bcontext.drawImage(texture, -tileSize / 2, -tileSize / 2, tileSize, tileSize);
+                bcontext.restore();
+            }
         }
+
+        backgroundBuffer = buffer;
+        fillCanvas();
+    })
+}
+
+function fillCanvas() {
+    const canvas = document.querySelector("#bgCanvas");
+    const context = canvas.getContext("2d");
+    context.imageSmoothingEnabled = false;
+
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    canvas.style.width = window.innerWidth + "px";
+    canvas.style.height = window.innerHeight + "px";
+
+    if (backgroundBuffer) {
+        context.drawImage(backgroundBuffer, 0, 0);
     }
 }
 
-function drawBrickTiles() {
-    document.querySelectorAll('.brick-tile').forEach(tile => tile.remove());
+async function buildBrickTiles() {
+    const dpr = window.devicePixelRatio || 1;
+    const buffer = document.createElement("canvas");
+    buffer.width = window.innerWidth * dpr;
+    buffer.height = window.innerHeight * dpr;
+    const bcontext = buffer.getContext("2d");
+    bcontext.imageSmoothingEnabled = false;
+    bcontext.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     const tileSize = 48;
     const cols = Math.ceil(window.innerWidth / tileSize) + 1;
-    const rows = Math.ceil(window.innerHeight / (tileSize / 2)) + 1; // FIXED
+    const rows = Math.ceil(window.innerHeight / (tileSize / 2)) + 1;
 
     const textures = [
-        '../res/brick1.svg',
-        '../res/brick2.svg',
-        '../res/brick3.svg',
-        '../res/brick4.svg',
-        '../res/brick5.svg',
-        '../res/brick1.svg',
-        '../res/brick2.svg',
-        '../res/brick3.svg',
-        '../res/brick4.svg',
-        '../res/brick5.svg',
-        '../res/brick1.svg',
-        '../res/brick2.svg',
-        '../res/brick3.svg',
-        '../res/brick4.svg',
-        '../res/brick5.svg',
-        '../res/brick1.svg',
-        '../res/brick2.svg',
-        '../res/brick3.svg',
-        '../res/brick4.svg',
-        '../res/brick5.svg',
+        '../res/brick1.png',
+        '../res/brick2.png',
+        '../res/brick3.png',
+        '../res/brick4.png',
+        '../res/brick5.png',
+        '../res/brick1.png',
+        '../res/brick2.png',
+        '../res/brick3.png',
+        '../res/brick4.png',
+        '../res/brick5.png',
+        '../res/brick1.png',
+        '../res/brick2.png',
+        '../res/brick3.png',
+        '../res/brick4.png',
+        '../res/brick5.png',
+        '../res/brick1.png',
+        '../res/brick2.png',
+        '../res/brick3.png',
+        '../res/brick4.png',
+        '../res/brick5.png',
         '../res/brick6.png',
         '../res/brick6.png',
-        '../res/brick7.png'
+        '../res/brick7.png',
     ];
 
-    for (let y = 0; y < rows; y++) {
-        for (let x = 0; x < cols; x++) {
-            const tile = document.createElement('div');
-            tile.className = 'brick-tile';
-            tile.style.width = `${tileSize}px`;
-            tile.style.height = `${tileSize}px`;
+    const images = textures.map(src => {
+        const img = new Image();
+        img.src = src;
+        return img;
+    });
 
-            let left = x * tileSize;
-            let top = y * (tileSize / 2);
-
-            if (y % 2 === 1) {
-                left -= tileSize / 2;
+    return Promise.all(images.map(function (img) {
+        return new Promise(function (resolve) {img.onload = resolve;});
+    })).then(function () {
+        for (let y = 0; y < rows; y++) {
+            for (let x = 0; x < cols; x++) {
+                const texture = images[Math.floor(Math.random() * images.length)];
+                bcontext.save();
+                if(y % 2 === 0) {
+                    bcontext.translate(x * tileSize + tileSize / 2, y * tileSize/2);
+                } else {
+                    bcontext.translate(x * tileSize - tileSize, y * tileSize/2);
+                }
+                bcontext.drawImage(texture, -tileSize / 2, -tileSize / 2, tileSize, tileSize);
+                bcontext.restore();
             }
-
-            tile.style.left = `${left}px`;
-            tile.style.top = `${top}px`;
-
-            const randomTexture = textures[Math.floor(Math.random() * textures.length)];
-            tile.style.backgroundImage = `url(${randomTexture})`;
-            tile.style.backgroundSize = 'cover';
-            tile.style.imageRendering = 'pixelated';
-            tile.style.zIndex = '-1';
-            document.body.appendChild(tile);
         }
-    }
+
+        backgroundBuffer = buffer;
+        fillCanvas();
+    })
 }
 
-// document.body.addEventListener('click', drawBrickTiles);
-// window.addEventListener('DOMContentLoaded', drawBrickTiles);
-// window.addEventListener('resize', drawBrickTiles);
-// setInterval(drawBrickTiles, 1000);
+function bricks() {
+    window.addEventListener('DOMContentLoaded', buildBrickTiles);
+    window.addEventListener('resize', buildBrickTiles);
+    document.body.addEventListener('click', buildBrickTiles);
+    buildBrickTiles();
+}
 
-window.addEventListener('DOMContentLoaded', drawBackgroundTiles);
-window.addEventListener('resize', drawBackgroundTiles);
-document.body.addEventListener('click', drawBackgroundTiles);
-// setInterval(drawBackgroundTiles, 500);
+function cobblestone() {
+    window.addEventListener('DOMContentLoaded', buildBackgroundTiles);
+    window.addEventListener('resize', buildBackgroundTiles);
+    document.body.addEventListener('click', buildBackgroundTiles);
+    buildBackgroundTiles();
+}
+
+bricks();
+
 function drawBackground() {
-    drawBackgroundTiles();
-    // drawBrickTiles();
+    // buildBackgroundTiles();
+    buildBrickTiles();
 }
-
-drawBackground();
